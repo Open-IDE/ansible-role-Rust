@@ -1,0 +1,25 @@
+- name: Toolbox container exists?
+  containers.podman.podman_container_info:
+    name: "{{ toolbox_container_name }}"
+  register: toolbox_status
+
+# - name: debug
+#   debug:
+#     msg: Create Toolbox!
+#   when: toolbox_status.containers | length == 0 or toolbox_status.containers.0.Name != toolbox_container_name
+
+- name: create toolbox
+  ansible.builtin.shell: toolbox create -y
+  when: toolbox_status.containers | length == 0 or toolbox_status.containers.0.Name != toolbox_container_name
+  async: 3600
+  poll: 15
+
+- name: Install Rust from https://rustup.rs/
+  ansible.builtin.shell: "{{ item }}"
+  args:
+    chdir: ~/
+    creates: rustup.rs
+  loop:
+  - toolbox run curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
+  - chmod +x rustup.sh
+  - toolbox run ./rustup.sh -y
