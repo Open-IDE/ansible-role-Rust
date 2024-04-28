@@ -1,6 +1,7 @@
 ---
-# https://www.google.com/search?q=rustup+unattended+install
+# https://rustup.rs/
 # https://github.com/rust-lang/rustup/issues/297
+# sch: https://www.google.com/search?q=rustup+unattended+install
 
 - name: Install dependencies
   apt:
@@ -17,5 +18,5 @@
 
 - name: Download and run Rust installation script
   shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-  #curl https://sh.rustup.rs -sSf | sh -s -- -y
-  creates: "{{ ansible_env.HOME }}/.cargo/bin/rustc"
+  args:
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/rustc"
