@@ -1,0 +1,15 @@
+---
+# https://wiki.archlinux.org/title/Rust#Rustup
+- name: Official RustUp package
+  community.general.pacman:
+    name:
+    - rustup
+    state: latest
+    update_cache: true
+  become: true
+
+- name: install Rust toolchain from Rustup
+  ansible.builtin.command: "rustup default {{ rust_version }}"
+  become: trrue
+  args:
+    creates: /usr/bin/rustc
